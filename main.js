@@ -49,19 +49,23 @@ function draw() {
   ctx.fillStyle = "rgb(221, 17, 143)";
   ctx.fillRect(rectX, rectY, size, size);
 
-  //Check if Player collides with any wall
+  // Check if Player collides with any wall
   for (let i = 0; i <walls.length; i++) {
     let wall = walls[i];
-    if (rectX < wall.x + wall.w &&
-      rectX + size > wall.x &&
-      rectY < wall.y + wall.h &&
-      rectY + size > wall.y
-  ) {
-      rectX = 20;
-      rectY = 300;
-   }
+    if (rectX < wall.x + wall.w && rectX + size > wall.x && rectY < wall.y + wall.h && rectY + size > wall.y) {
+      if (rectX + size > wall.x) {
+        rectX = wall.x - size;
+      } else if (rectX < wall.x + wall.w) {
+        rectX = wall.x + wall.w;
+      } else if (rectY + size > wall.y) {
+        rectY = wall.y + wall.h;
+      } else {
+        rectY = wall.y - size;
+      }
+    }
   }
 
+  // Check for border collision
   if (rectX < 0) {
     rectX = 0;
   } else if (rectX + size > cnv.width) {
