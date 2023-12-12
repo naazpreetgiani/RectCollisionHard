@@ -49,35 +49,15 @@ function draw() {
   ctx.fillStyle = "rgb(221, 17, 143)";
   ctx.fillRect(rectX, rectY, size, size);
 
-  // Check if Player collides with any wall
-  for (let i = 0; i <walls.length; i++) {
-    let wall = walls[i];
-    if (rectX < wall.x + wall.w && rectX + size > wall.x && rectY < wall.y + wall.h && rectY + size > wall.y) {
-      if (rectX + size > wall.x) {
-        rectX = wall.x - size;
-      } else if (rectX < wall.x + wall.w) {
-        rectX = wall.x + wall.w;
-      } else if (rectY + size > wall.y) {
-        rectY = wall.y + wall.h;
-      } else {
-        rectY = wall.y - size;
-      }
-    }
-  }
-
-  // Check for border collision
   if (rectX < 0) {
     rectX = 0;
   } else if (rectX + size > cnv.width) {
     rectX = cnv.width - size;
-  }
-  
-  if (rectY < 0) {
+  } else if (rectY < 0) {
     rectY = 0;
   } else if (rectY + size > cnv.height) {
     rectY = cnv.height - size;
   }
-  
   // Animation Loop
   requestAnimationFrame(draw);
 }
@@ -88,7 +68,7 @@ document.addEventListener("keyup", keyupHandler);
 
 function keydownHandler(e) {
     //Check for keys pressed
-  if (e.code === "ArrowUp") {
+    if (e.code === "ArrowUp") {
       upPressed = true;
     } else if (e.code === "ArrowDown") {
       downPressed = true;
@@ -96,18 +76,44 @@ function keydownHandler(e) {
       leftPressed = true;
     } else if (e.code === "ArrowRight") {
       rightPressed = true;
-  }
+    }
 
   if (upPressed) {
-      rectY -= 7;
-    } else if (downPressed) {
-      rectY += 7;
-    } else if (leftPressed) {
-      rectX -= 7;
-    } else if (rightPressed) {
-      rectX += 7;
+    rectY -= 7;
+  } else if (downPressed) {
+    rectY += 7;
+  } else if (leftPressed) {
+    rectX -= 7;
+  } else if (rightPressed) {
+    rectX += 7;
+  }
+
+  for (let i = 0; i < walls.length; i++) {
+    let wall = walls[i];
+    if (rectX < wall.x + wall.w &&
+      rectX + size > wall.x &&
+      rectY < wall.y + wall.h &&
+      rectY + size > wall.y) {
+      if (upPressed) {
+        if (rectY + size > wall.y) {
+        rectY = wall.y + wall.h;
+        }
+      } else if (downPressed) {
+        if (rectY < wall.y + wall.h){
+        rectY = wall.y - size;
+        }
+      } else if (leftPressed) {
+        if (rectX < wall.x + wall.w) {
+          rectX = wall.x + wall.w;
+        }
+      } else if (rightPressed) {
+        if (rectX + size > wall.x) {
+          rectX = wall.x - size;
+        }
+      }
     }
-}
+  }
+} 
 
 function keyupHandler(e) {
     //Check for keys pressed
